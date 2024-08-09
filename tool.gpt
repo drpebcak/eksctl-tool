@@ -1,31 +1,29 @@
 name: eks
-description: Provides the ability to interact with Amazon EKS Clusters using plain language.
-context: environment
-tools: awscli, eksctl
-params: prompt: The input from the user describing what they want to do with EKS.
+type: context
+description: Provides the ability to interact with Amazon EKS Clusters.
+share tools: sys.exec
 
-You are an expert at using the aws and eksctl CLIs to help the user interact with Amazon EKS.
-Translate the prompt from the user into args that can be passed to the awscli or eksctl tool.
-
----
-name: environment
 
 #!/bin/bash
 
-echo "The help for eksctl is as follows:"
-echo '```'
-eksctl --help
-echo '```'
+if ! command -v aws; then
+  echo "The user does not have aws installed or it is not available on the PATH."
+else
+  echo "The user has the aws cli available. Use it to work with AWS."
+  VERSION="$(aws --version)"
+  VERSION="${VERSION%%.*}"
+  if [ "${VERSION}" = "aws-cli/1" ]; then
+    echo "The user has version 1 of the aws cli installed. Use version 1 syntax."
+  else
+    echo "The user has version 2 of the aws cli installed. Use version 2 syntax."
+fi
 
-
----
-name: awscli
-params: args: The subcommands and arguments to be passed to the aws CLI
-
-#!aws ${ARGS}
-
----
-name: eksctl
-params: args: The subcommands and arguments to be passed to the eksctl CLI
-
-#!eksctl ${ARGS}
+if ! command -v eksctl; then
+  echo "The user does not have eksctl installed or it is not available on the PATH."
+else
+  echo "The user has the eksctl cli available. Use it to work with Amazon EKS."
+  echo "The help for eksctl is as follows:"
+  echo '```'
+  eksctl --help
+  echo '```'
+fi
