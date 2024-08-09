@@ -1,28 +1,16 @@
 name: eks
-chat: true
-description: EKS assistant for managing EKS clusters in AWS using eksctl
+description: Provides the ability to interact with Amazon EKS Clusters using plain language.
 context: environment
 tools: awscli, eksctl
+params: prompt: The input from the user describing what they want to do with EKS.
 
-You can run the EKS and AWS CLIs (eksctl and aws) to help the user interact with EKS. Ask the user what they need help with.
-
-Rules
-- For cluster create use a config file based approach unless told otherwise.
-- Prompt the user before running any commands that might change or delete resources.
-- When running `eksctl get` commands always include the appropriate `--region' flag.
-- If you need to create or update a config file first run `eksctl utils schema` to get the latest config file schema.
-- Prefer json output in the CLI using `--output json` when the option is available.
+You are an expert at using the aws and eksctl CLIs to help the user interact with Amazon EKS.
+Translate the prompt from the user into args that can be passed to the awscli or eksctl tool.
 
 ---
 name: environment
 
 #!/bin/bash
-
-echo "Your default region is: $(aws configure get region)"
-
-if [ ! -e "$(command -v eksctl)" ]; then
-    echo "The user does not have eksctl installed, they must install it"
-fi
 
 echo "The help for eksctl is as follows:"
 echo '```'
@@ -34,12 +22,10 @@ echo '```'
 name: awscli
 params: args: The subcommands and arguments to be passed to the aws CLI
 
-#!/bin/bash
-aws ${ARGS}
+#!aws ${ARGS}
 
 ---
 name: eksctl
 params: args: The subcommands and arguments to be passed to the eksctl CLI
 
-#!/bin/bash
-eksctl ${ARGS}
+#!eksctl ${ARGS}
