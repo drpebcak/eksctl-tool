@@ -3,7 +3,6 @@ type: context
 description: Provides the ability to interact with Amazon EKS Clusters.
 share tools: sys.exec
 
-
 #!/bin/bash
 
 if ! command -v aws; then
